@@ -40,7 +40,7 @@ To evaluate the performance of VaR models, the following backtesting techniques 
 4. Quantile Loss Function: Evaluates the predictive accuracy for quantile regression models, penalizing under- and over-estimation asymmetrically.
 5. MAE and RMSE: Standard error metrics (Mean Absolute Error and Root Mean Squared Error) to assess overall prediction accuracy.
 
-The backtesting analysis confirmed that:
+The [backtesting analysis](results) confirmed that:
 - Boosting-based Machine Learning models achieved superior performance in terms of coverage, calibration, and quantile accuracy.
 - Traditional models, while effective, were outperformed by modern Machine Learning approaches in predicting extreme losses.
 - Neural Networks required careful tuning but showed potential for further improvement with more advanced architectures.

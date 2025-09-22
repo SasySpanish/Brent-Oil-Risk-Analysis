@@ -1,8 +1,8 @@
 # Results
 
 This folder contains visualizations of backtesting results:  
-- [Traditional VaR backtesting results](results/backtesting_traditional_var.md)  
-- [ML Models backtesting results](results/backtesting_ml_models.md)
+- [Traditional VaR backtesting results](backtesting_traditional_var.md)  
+- [ML Models backtesting results](backtesting_ml_models.md)
 - Boosting models vs. observed losses
 - All ML models vs. observed returns 
 - Traditional VaR models vs. observed losses

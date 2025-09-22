@@ -5,7 +5,7 @@ This folder contains all the datasets used for the Brent VaR analysis, including
 - `brentv.csv`: Modified version during the process (added log returns and conditional volatility columns).
 - Additional data used for feature engineering or volatility calculation.  
 
-## Dataset Features
+### Dataset Features
 
 The dataset includes the following key variables:
 
@@ -17,10 +17,5 @@ The dataset includes the following key variables:
 
 ## Log-Returns Transformation
 
-To make the dataset suitable for VaR analysis, log-returns were calculated as the natural logarithm of the ratio between the current and previous day’s closing price:
-
-\[
-r_t = \ln{\left(\frac{P_t}{P_{t-1}}\right)} = \ln P_t - \ln P_{t-1}
-\]
-
+To make the dataset suitable for VaR analysis, log-returns were calculated as the natural logarithm of the ratio between the current and previous day’s closing price.
 Log-returns are preferred over simple returns because they are additive over time, less sensitive to extreme price variations, and exhibit statistical properties better suited for financial risk analysis. They provide a more stationary series and reduce heteroscedasticity, facilitating the modeling of extreme quantiles essential for VaR estimation. This transformation is also particularly useful for machine learning models, as it produces a variable that is more manageable and representative of market dynamics.

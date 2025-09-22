@@ -17,7 +17,10 @@ This repository contains the analysis and results of a study on the estimation o
 The study focused on Brent crude oil due to its high volatility and central role in global financial and energy markets. The main objective was to analyze the risk of potential losses through VaR estimation and evaluate the performance of various models.
 
 ### Traditional Models
-- Parametric VaR, Historical VaR, GARCH-based models, and Quantile Regression were implemented.
+- Parametric VaR: Assumes returns follow a normal distribution, calculating VaR based on mean and standard deviation.
+- Historical VaR: Non-parametric method that uses empirical quantiles of past returns.
+- GARCH-based VaR: Incorporates time-varying volatility using GARCH(1,1) models, generating both parametric and historical VaR based on conditional volatility.
+- Quantile Regression VaR: Estimates VaR directly at a specified quantile using a regression framework, adapting better to the empirical distribution of returns.
 - Quantile Regression was found to be the most effective among classical approaches, showing better calibration and higher precision in VaR estimation due to its flexibility in modeling quantiles.
 
 ### Machine Learning Models
@@ -27,6 +30,20 @@ The study focused on Brent crude oil due to its high volatility and central role
 - LightGBM, in particular, provided excellent predictive performance for risk quantiles.
 - Quantile Regression Forest showed lower adaptability and precision compared to boosting models.
 - Neural Networks demonstrated potential but required careful hyperparameter tuning and model optimization to avoid overfitting and convergence issues.
+
+### Backtesting Methodologies
+To evaluate the performance of VaR models, the following backtesting techniques were applied:
+
+1. Violation Rate / Hit Ratio: Measures the percentage of times the actual loss exceeded the predicted VaR. For a 95% VaR, approximately 5% of observations are expected to exceed the VaR threshold.
+2. Kupiec Proportion of Failures Test: A statistical test that compares the observed number of VaR violations to the expected number, assessing the model's calibration.
+3. Coverage: Calculates the fraction of observations where actual losses were below the predicted VaR, providing a simple measure of model reliability.
+4. Quantile Loss Function: Evaluates the predictive accuracy for quantile regression models, penalizing under- and over-estimation asymmetrically.
+5. MAE and RMSE: Standard error metrics (Mean Absolute Error and Root Mean Squared Error) to assess overall prediction accuracy.
+
+The backtesting analysis confirmed that:
+- Boosting-based Machine Learning models achieved superior performance in terms of coverage, calibration, and quantile accuracy.
+- Traditional models, while effective, were outperformed by modern Machine Learning approaches in predicting extreme losses.
+- Neural Networks required careful tuning but showed potential for further improvement with more advanced architectures.
 
 ### Key Findings
 - Machine Learning models significantly outperform traditional VaR models in robustness and predictive reliability.

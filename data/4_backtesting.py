@@ -1,9 +1,9 @@
-# Librerie 
+# Libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from scipy.stats import  chi2, norm 
+from scipy.stats import chi2, norm
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import statsmodels.api as sm
 
@@ -19,13 +19,13 @@ from sklearn.ensemble import GradientBoostingRegressor
 # Import dataset
 data = pd.read_csv("brentv.csv", parse_dates=["Date"])
 data.set_index("Date", inplace=True)
-data1=pd.read_csv('brent.csv', parse_dates=["Date"])
+data1 = pd.read_csv('brent.csv', parse_dates=["Date"])
 data1.set_index("Date", inplace=True)
 
 # Log-returns
 data["Log_Returns"] = np.log(data["Close"] / data["Close"].shift(1))
 data['Log_Returns'] = data['Log_Returns'].fillna(method='bfill')
-returns=data['Log_Returns']
+returns = data['Log_Returns']
 
 # Calculate negative returns only (losses)
 real_losses = returns.apply(lambda x: -x if x < 0 else 0)
@@ -68,12 +68,13 @@ resultreg = regq.fit(q=0.05)
 VaR_R = resultreg.predict(X_scaled)
 
 
-#ML Variables
+# ML Variables
 # Features and target
 X = data[['Close', 'Volume', 'Conditional_Volatility']]
 y = data['Log_Returns']
 
 # Train-Test split
+from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
 
 # Standardization
@@ -125,7 +126,7 @@ nn.fit(X_train_scaled, y_train, epochs=50, batch_size=32, verbose=0)
 
 VaR_NN = nn.predict(X_test_scaled)  # array shape (n,1)
 
-# Funzione per calcolare le violazioni del VaR e i risultati del test di Kupiec
+# Function to calculate VaR violations and Kupiec test results
 y_true = -real_losses
 
 def calculate_var_violations(real_losses, models, alpha=0.05):
@@ -133,7 +134,7 @@ def calculate_var_violations(real_losses, models, alpha=0.05):
     n_obs = len(real_losses)
 
     for model_name, var_values in models.items():
-        # Calcolo delle violazioni
+        # Calculate violations
         violations = -real_losses < var_values
         n_violations = np.sum(violations)
 
@@ -144,7 +145,7 @@ def calculate_var_violations(real_losses, models, alpha=0.05):
         pof_stat = -2 * (n_obs * np.log(1 - alpha) + n_violations * np.log(alpha)) + 2 * (n_obs * np.log(1 - hit_ratio) + n_violations * np.log(hit_ratio))
         p_value = 1 - chi2.cdf(pof_stat, df=1)
 
-        # Salva i risultati
+        # Save results
         backtest1[model_name] = {
             'Hit Ratio': hit_ratio,
             'Expected Hit Ratio': alpha,
@@ -154,7 +155,7 @@ def calculate_var_violations(real_losses, models, alpha=0.05):
 
     return backtest1
 
-# Funzioni per calcolare vari metriche
+# Functions to calculate performance metrics
 def calculate_violations(y_true, y_pred):
     return ((np.sum(y_true < y_pred)) / (len(y_true))) * 100
 
@@ -171,22 +172,23 @@ def calculate_mae(y_true, y_pred):
 def calculate_rmse(y_true, y_pred):
     return mean_squared_error(y_true, y_pred)
 
-# Modelli VaR
+# VaR Models
 models1 = {
-    'Parametrico': VaR_parametric,
-    'Storico': VaR_historical,
-    'Parametrico GARCH': VaRP_dynamic,
-    'Storico GARCH': VaRH_dynamic,
-    'Regressione Quantilica': VaR_R
+    'Parametric': VaR_parametric,
+    'Historical': VaR_historical,
+    'Parametric GARCH': VaRP_dynamic,
+    'Historical GARCH': VaRH_dynamic,
+    'Quantile Regression': VaR_R
 }
-#Trasformo in array gli scalari 
-scalar_models = ['Parametrico', 'Storico']
+
+# Transform scalar values into arrays
+scalar_models = ['Parametric', 'Historical']
 
 for model_name in scalar_models:
-    if np.isscalar(models1[model_name]):  # Se il valore è scalare
-        models1[model_name] = np.full_like(y_true, models1[model_name])  # Crea un array riempito con quel valore
+    if np.isscalar(models1[model_name]):  
+        models1[model_name] = np.full_like(y_true, models1[model_name])  
 
-# Risultati
+# Results
 backtesting1 = {}
 
 for model_name, y_pred in models1.items():
@@ -207,31 +209,30 @@ for model_name, y_pred in models1.items():
         'MSE': f"{rmse:.5f}"
     }
 
-# Creazione di un DataFrame per visualizzare i risultati
+# Create a DataFrame to visualize results
 backtesting1_df = pd.DataFrame(backtesting1).T
 backtesting1_df['Model'] = backtesting1_df.index
 
-# Riordina le colonne per avere 'Model' come prima colonna
+# Reorder columns to have 'Model' first
 cols = ['Model'] + [col for col in backtesting1_df.columns if col != 'Model']
 backtesting1_df = backtesting1_df[cols]
 
-# Stampa dei risultati
+# Print results
 print(backtesting1_df)
 
-# Subplot della tabella
-fig, ax = plt.subplots(figsize=(8, 6))  # Imposta le dimensioni della figura
-ax.axis('off')  # Nascondi gli assi
+# Subplot of the table
+fig, ax = plt.subplots(figsize=(8, 6))  
+ax.axis('off')  
 table = ax.table(cellText=backtesting1_df.values, colLabels=backtesting1_df.columns, loc='center')
 for i in range(len(backtesting1_df.columns)):
-    max_len = max(backtesting1_df[backtesting1_df.columns[i]].astype(str).map(len).max(), len(backtesting1_df.columns[i]))  # Trova la lunghezza massima
-    table.auto_set_column_width([i])  # Imposta la larghezza automatica della colonna
+    max_len = max(backtesting1_df[backtesting1_df.columns[i]].astype(str).map(len).max(), len(backtesting1_df.columns[i]))  
+    table.auto_set_column_width([i])  
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-table.scale(1.2, 1.2)  # Scala le dimensioni della tabella
+table.scale(1.2, 1.2)  
 plt.show()
 
-## Backtesting e Confronto
-# Modelli ML
+# Machine Learning Models
 models2 = {
     'QR Forest': VaR_QRF,
     'Gradient Boosting': VaR_GB,
@@ -240,7 +241,8 @@ models2 = {
     'CatBoost': VaR_CAT,
     'Neural Networks': VaR_NN[:, 0]
 }
-# Risultati
+
+# Backtesting results
 backtesting2 = {}
 print(quantile_loss)
 
@@ -263,61 +265,60 @@ for model_name, y_pred in models2.items():
         'MSE': f"{rmse:.5f}"
     }
 
-# Creazione di un DataFrame per visualizzare i risultati
+# Create a DataFrame to display the results
 backtesting2_df = pd.DataFrame(backtesting2).T
 backtesting2_df['Model'] = backtesting2_df.index
 
-# Riordina le colonne per avere 'Model' come prima colonna
+# Reorder columns to have 'Model' as the first column
 cols2 = ['Model'] + [col for col in backtesting2_df.columns if col != 'Model']
 backtesting2_df = backtesting2_df[cols]
 
-# Stampa dei risultati
+# Print results
 print(backtesting2_df)
 
-# Subplot della Tabella
-fig, ax = plt.subplots(figsize=(8, 6))  # Imposta le dimensioni della figura
-ax.axis('off')  # Nascondi gli assi
+# Subplot table
+fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size
+ax.axis('off')  # Hide axes
 table = ax.table(cellText=backtesting2_df.values, colLabels=backtesting2_df.columns, loc='center')
 for i in range(len(backtesting2_df.columns)):
-    max_len = max(backtesting2_df[backtesting2_df.columns[i]].astype(str).map(len).max(), len(backtesting2_df.columns[i]))  # Trova la lunghezza massima
-    table.auto_set_column_width([i])  # Imposta la larghezza automatica della colonna
+    max_len = max(backtesting2_df[backtesting2_df.columns[i]].astype(str).map(len).max(), len(backtesting2_df.columns[i]))  # Find max length
+    table.auto_set_column_width([i])  # Set automatic column width
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-table.scale(1.2, 1.2)  # Scala le dimensioni della tabella
+table.scale(1.2, 1.2)  # Scale table size
 plt.show()
 
-#perdite
+# Losses
 plt.figure(figsize=(12, 6))
-plt.plot(data.index[1200:1500], real_losses[1200:1500], label="Perdite osservate", color="blue", alpha=0.7)
-plt.plot(data.index[1200:1500], -VaR_GB[1200:1500]+0.005, label="VaR al 95% con Gradient Boosting", color="orange")
-plt.plot(data.index[1200:1500], -VaR_XGB[1200:1500]-0.008, label="VaR al 95% con XGB", color="purple")
-plt.plot(data.index[1200:1500], -VaR_LGB[1200:1500]-0.008, label="VaR al 95% con LGB", color="cyan",alpha=0.6)
-plt.plot(data.index[1200:1500], -VaR_CAT[1200:1500], label="VaR al 95% con CAT", color="red")
+plt.plot(data.index[1200:1500], real_losses[1200:1500], label="Observed Losses", color="blue", alpha=0.7)
+plt.plot(data.index[1200:1500], -VaR_GB[1200:1500]+0.005, label="95% VaR with Gradient Boosting", color="orange")
+plt.plot(data.index[1200:1500], -VaR_XGB[1200:1500]-0.008, label="95% VaR with XGB", color="purple")
+plt.plot(data.index[1200:1500], -VaR_LGB[1200:1500]-0.008, label="95% VaR with LGB", color="cyan", alpha=0.6)
+plt.plot(data.index[1200:1500], -VaR_CAT[1200:1500], label="95% VaR with CAT", color="red")
 plt.legend(loc='upper right')
 plt.show()
 
-#rendimenti
+# Returns
 plt.figure(figsize=(12, 6))
-plt.plot(data.index[1000:1500], data['Log_Returns'][1000:1500], label="Rendimenti osservati", color="blue", alpha=0.7)
-plt.plot(data.index[1000:1500], VaR_GB[1000:1500]-0.005, label="VaR al 95% con Gradient Boosting", color="orange")
-plt.plot(data.index[1000:1500], VaR_XGB[1000:1500]+0.008, label="VaR al 95% con XGB", color="purple")
-plt.plot(data.index[1000:1500], VaR_LGB[1000:1500]+0.008, label="VaR al 95% con LGB", color="cyan",alpha=0.6)
-plt.plot(data.index[1000:1500], VaR_CAT[1000:1500], label="VaR al 95% con CAT", color="red")
-plt.plot(data.index[1000:1500], VaR_QRF[1000:1500], label="VaR al 95% con QRF", color="lime",alpha=0.4)
-plt.plot(data.index[1000:1500], VaR_NN[1000:1500]+0.003, label="VaR al 95% con NN", color="mediumaquamarine")
+plt.plot(data.index[1000:1500], data['Log_Returns'][1000:1500], label="Observed Returns", color="blue", alpha=0.7)
+plt.plot(data.index[1000:1500], VaR_GB[1000:1500]-0.005, label="95% VaR with Gradient Boosting", color="orange")
+plt.plot(data.index[1000:1500], VaR_XGB[1000:1500]+0.008, label="95% VaR with XGB", color="purple")
+plt.plot(data.index[1000:1500], VaR_LGB[1000:1500]+0.008, label="95% VaR with LGB", color="cyan", alpha=0.6)
+plt.plot(data.index[1000:1500], VaR_CAT[1000:1500], label="95% VaR with CAT", color="red")
+plt.plot(data.index[1000:1500], VaR_QRF[1000:1500], label="95% VaR with QRF", color="lime", alpha=0.4)
+plt.plot(data.index[1000:1500], VaR_NN[1000:1500]+0.003, label="95% VaR with NN", color="mediumaquamarine")
 plt.legend()
 plt.show()
 
+### Comparison of All Models
 
-### Confronto Tutti i modelli
-
-# Modelli e le loro predizioni
+# Models and their predictions
 models = {
-    'Parametrico': VaR_parametric,
-    'Storico': VaR_historical,
-    'Parametrico GARCH': VaRP_dynamic,
-    'Storico GARCH': VaRH_dynamic,
-    'Regressione Quantilica': VaR_R
+    'Parametric': VaR_parametric,
+    'Historical': VaR_historical,
+    'Parametric GARCH': VaRP_dynamic,
+    'Historical GARCH': VaRH_dynamic,
+    'Quantile Regression': VaR_R,
     'QR Forest': VaR_QRF,
     'Gradient Boosting': VaR_GB,
     'XGBoost': VaR_XGB,
@@ -326,12 +327,12 @@ models = {
     'Neural Networks': VaR_NN[:, 0]
 }
 
-# Controllo se i modelli nella lista sono scalari e li trasformo in array della stessa lunghezza di y_true
+# Check if the models in the list are scalars and transform them into arrays with the same length as y_true
 for model_name in scalar_models:
-    if np.isscalar(models[model_name]):  # Se il valore è scalare
-        models[model_name] = np.full_like(y_true, models[model_name])  # Crea un array riempito con quel valore
+    if np.isscalar(models[model_name]):  # If the value is scalar
+        models[model_name] = np.full_like(y_true, models[model_name])  # Create an array filled with that value
 
-# Risultati
+# Results
 results = {}
 
 for model_name, y_pred in models.items():
@@ -353,25 +354,25 @@ for model_name, y_pred in models.items():
         'MSE': f"{rmse:.5f}"
     }
 
-# Creazione di un DataFrame per visualizzare i risultati
+# Create a DataFrame to display the results
 results_df = pd.DataFrame(results).T
 results_df['Model'] = results_df.index
 
-# Riordina le colonne per avere 'Model' come prima colonna
+# Reorder columns to have 'Model' as the first column
 cols = ['Model'] + [col for col in results_df.columns if col != 'Model']
 results_df = results_df[cols]
 
-# Stampa dei risultati
+# Print results
 print(results_df)
 
-# Tabella
-fig, ax = plt.subplots(figsize=(8, 6))  # Imposta le dimensioni della figura
-ax.axis('off')  # Nascondi gli assi
+# Table
+fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size
+ax.axis('off')  # Hide axes
 table = ax.table(cellText=results_df.values, colLabels=results_df.columns, loc='center')
 for i in range(len(results_df.columns)):
-    max_len = max(results_df[results_df.columns[i]].astype(str).map(len).max(), len(results_df.columns[i]))  # Trova la lunghezza massima
-    table.auto_set_column_width([i])  # Imposta la larghezza automatica della colonna
+    max_len = max(results_df[results_df.columns[i]].astype(str).map(len).max(), len(results_df.columns[i]))  # Find max length
+    table.auto_set_column_width([i])  # Set automatic column width
 table.auto_set_font_size(False)
 table.set_fontsize(10)
-table.scale(1.2, 1.2)  # Scala le dimensioni della tabella
+table.scale(1.2, 1.2)  # Scale table size
 plt.show()

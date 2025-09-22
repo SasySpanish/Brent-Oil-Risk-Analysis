@@ -18,19 +18,22 @@ The time series of Brent prices shows several critical events:
 - Peak above $140 in 2008, followed by a sharp drop during the global financial crisis.
 - Stable period above $100 between 2011–2014, then a crash below $30 in 2016 (OPEC decisions).
 - Collapse in 2020 during the COVID-19 pandemic, followed by a recovery in 2021–2022.
-
+-  ![aaa](close_price_timeseries.png)
 These events reflect the cyclical and volatile nature of the oil market, crucial for Value-at-Risk (VaR) estimation.
 
 ## 3. Distribution of Returns
 - **Histogram & Distribution Shape**: returns are negatively skewed (skewness = -0.62) and leptokurtic (kurtosis = 10.48).
 - This implies heavier tails and higher probability of extreme negative returns compared to a normal distribution.
+- ![aaa](log_distribution.png)
 
 ## 4. Normality Tests
-- A **Q-Q plot** shows clear deviations from normality, especially in the tails.  
+- A **Q-Q plot** shows clear deviations from normality, especially in the tails.
+-  ![aaa](qq_plot.png) 
 - The **Kolmogorov–Smirnov test** rejects the null hypothesis of normality (stat = 0.46706, p-value = 0.0).  
 - This indicates that normality-based models might underestimate risk in presence of extreme events.
 
 ## 5. Extreme Events
+-  ![aaa](boxplot_log.png)
 A **boxplot of log-returns** reveals several outliers, especially during:
 - The 2008 financial crisis,
 - The 2014–2016 oil price collapse,
@@ -39,6 +42,7 @@ A **boxplot of log-returns** reveals several outliers, especially during:
 Outliers confirm the non-normal nature of returns and highlight the importance of tail-sensitive risk models.
 
 ## 6. Correlation Analysis
+ ![aaa](correlation_matrix.png)
 - **Close vs. Volume**: moderate positive correlation (0.317).
 - **Close vs. Log Returns**: negligible correlation (0.017).
 - **Volume vs. Log Returns**: very weak negative correlation (-0.041).

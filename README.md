@@ -6,7 +6,7 @@ This repository contains the analysis and results of a study on the estimation o
 
 - `data/` : Contains raw and processed datasets used for the analysis.
 - `notebooks/` : Jupyter notebooks with full analysis, model implementation, and plot generation.
-- `scripts/` : Python scripts for data processing, modeling, and backtesting.
+- `src/` : Python scripts for data processing, modeling, and backtesting.
 - `results/` : PNG images of the backtesting results and key plots, including:
   1. Comparison of the four boosting models (Gradient Boosting, XGBoost, LightGBM, CatBoost) against actual losses.
   2. Comparison of all Machine Learning models against observed returns.

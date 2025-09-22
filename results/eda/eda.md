@@ -5,7 +5,7 @@ This section provides an overview of the exploratory analysis performed on the B
 ## 1. Descriptive Statistics
 Using the `.describe()` function from **pandas**, we obtained summary statistics of the key variables:
 - **Close**: mean = 67.21, std = 28.54, range = [17.68, 146.08].
-- ![aaa](close_price_stats.png)
+- ![aaa](close_price_stat.png)
 - **Volume**: mean = 159,862, std = 114,597, range = [5,180, 869,150].
 - ![aaa](volume_exchanged_stats.png)
 - **Log Returns**: mean ≈ 0.00017, std = 0.023, range = [-0.28, 0.19].

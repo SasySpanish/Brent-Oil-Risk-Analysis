@@ -14,7 +14,7 @@ This repository contains the analysis and results of a study on the estimation o
 
 ## Analysis Summary
 
-The study focused on Brent crude oil due to its high volatility and central role in global financial and energy markets. The main objective was to analyze the risk of potential losses through VaR estimation and evaluate the performance of various models.
+The study focused on [Brent crude oil due to its high volatility and central role in global financial and energy markets](Oil_Market). The main objective was to analyze the risk of potential losses through VaR estimation and evaluate the performance of various models.
 
 ### Traditional Models
 - Parametric VaR: Assumes returns follow a normal distribution, calculating VaR based on mean and standard deviation.

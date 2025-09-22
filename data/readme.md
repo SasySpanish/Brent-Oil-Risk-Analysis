@@ -6,6 +6,7 @@ This folder contains all the datasets used for the Brent VaR analysis, including
 
 
 ### Dataset Features
+The data was obtained from Investing.com and spans from January 2000 to December 2024, totaling 6,422 daily observations. The dataset provides a comprehensive view of Brent price dynamics over time, capturing long-term trends, extreme events, and different market conditions, including periods of high volatility, global economic crises, and relative stability.
 
 The dataset includes the following key variables:
 

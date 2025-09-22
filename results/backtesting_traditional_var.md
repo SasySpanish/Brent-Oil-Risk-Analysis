@@ -1,5 +1,5 @@
 # Traditional VaR Backtesting
-(var_backtest.png)
+!(var_backtest.png)
 The backtesting analysis evaluates the performance of each model in terms of calibration and accuracy, using metrics such as the number of violations, Kupiec test statistic, coverage, Mean Absolute Error (MAE), and Mean Squared Error (MSE).
 
 ## Models Included

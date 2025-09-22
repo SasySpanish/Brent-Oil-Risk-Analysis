@@ -50,12 +50,3 @@ The backtesting analysis evaluates the performance of each model in terms of cal
 ## Summary
 
 Comparing the models based on calibration metrics, the Historical VaR, Historical GARCH VaR, and Quantile Regression show the best performance, with violations very close to the expected level and no significant issues flagged by the Kupiec test. In terms of precision, Quantile Regression leads with the lowest MAE and MSE, followed by Parametric GARCH and Historical GARCH. Overall, Quantile Regression proves to be the most effective model, combining robust calibration with superior VaR estimation accuracy.
-
-## Files
-
-- PNG images of the backtesting results for each model are included in this folder.  
-
-
-## Visualization
-
-The provided figures illustrate the performance of each traditional VaR model relative to the actual losses, allowing a clear comparison of conservativeness, calibration, and accuracy.

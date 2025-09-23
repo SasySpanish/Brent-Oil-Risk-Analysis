@@ -4,10 +4,10 @@ This repository contains the analysis and results of a study on the estimation o
 
 ## Repository Structure
 
-- `data/` : Contains raw and processed datasets used for the analysis.
-- `notebooks/` : Jupyter notebooks with full analysis, model implementation, and plot generation.
-- `src/` : Python scripts for data processing, modeling, and backtesting.
-- `results/` : PNG images of the backtesting results and key plots, including:
+- `data/` : Contains raw (brent.csv) and processed datasets (brentv.csv) used for the analysis.
+- `notebooks/` : Jupyter notebooks with eda, full analysis, model training implementation and plot generation.
+- `src/` : Python scripts for a full analysis (data processing, modeling, and backtesting)
+- `results/` : Backtesting results and key plots, including:
   1. Comparison of the four boosting models (Gradient Boosting, XGBoost, LightGBM, CatBoost) against actual losses.
   2. Comparison of all Machine Learning models against observed returns.
   3. Comparison of traditional VaR models (including GARCH and Quantile Regression) against actual losses.
